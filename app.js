@@ -1,6 +1,8 @@
 const express=require('express');
 const exphbs=require('express-handlebars');
+const bodyParser=require('body-parser');
 const mongoose=require('mongoose');
+
 
 const app=express();
 // Map global promises -get rid of  warning
@@ -20,6 +22,9 @@ const Idea=mongoose.model('Ideas');
 app.engine('handlebars',exphbs({
     defaultLayout:'main'
 }));
+// Body parser middleware
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json())
 app.set('view engine','handlebars');
 // Index Route
 app.get(('/'),(req,res)=>{
@@ -38,6 +43,13 @@ app.get(('/about'),(req,res)=>{
 app.get(('/ideas/add'),(req,res)=>{
     res.render('ideas/add');
 });
+
+// Process form
+app.post('/ideas',(req,res)=>{
+    console.log(req.body);
+    res.send('ok')
+}
+)
 const port=7000;
 
 app.listen(port,()=>{
