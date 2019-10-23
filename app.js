@@ -17,7 +17,7 @@ app.get(('/'),(req,res)=>{
   
 // About Route
 app.get(('/about'),(req,res)=>{
-    res.send('About page');
+    res.render('about');
 });
 
 const port=7000;
