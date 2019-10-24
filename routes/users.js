@@ -11,4 +11,9 @@ router.get('/register',(req,res)=>{
     res.render('users/register');
 });
 
+// Register form post
+router.post('/register',(req,res)=>{
+    res.send('register');
+});
+
 module.exports=router; 
