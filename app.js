@@ -38,10 +38,21 @@ app.get(('/'),(req,res)=>{
 app.get(('/about'),(req,res)=>{
     res.render('about');
 });
+// Idea index page
+app.get(('/ideas'),(req,res)=>{
+    res.render('ideas/index');
+})
 
 // Add ideas
 app.get(('/ideas/add'),(req,res)=>{
-    res.render('ideas/add');
+    Idea.find({})
+    .sort({dare:'desc'})
+    .then(ideas=>{
+        res.render('ideas/add',{
+            ideas:ideas
+        });
+    })
+  
 });
 
 // Process form
@@ -60,11 +71,19 @@ app.post('/ideas',(req,res)=>{
           details:req.body.title
       });
   }else{
-      res.send('ok');
+      const newUser={
+          title:req.body.title,
+          details:req.body.details
+      }
+      new Idea(newUser)
+      .save()
+      .then(idea=>{
+          res.redirect('/ideas');
+      })
   }
 
 });
-const port=7000;
+const port=3000;
 
 app.listen(port,()=>{
     console.log(`Server started on port:${port}`);
