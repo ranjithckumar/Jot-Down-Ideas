@@ -3,6 +3,10 @@
     <h3>{{title}}</h3>
     <p>{{details}}</p>
     <a href="/ideas/edit/{{id}}"class="btn btn-dark btn-block">Edit</a>
+    <form method="post"action="/ideas/{{id}}?
+    _method=DELETE">
+    <input type="hidden"name="_method" value="DELETE">
+    </form>
 </div>
 {{else}}
 <p>No video ideas listed</p>
