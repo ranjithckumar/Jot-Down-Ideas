@@ -144,6 +144,15 @@ app.delete('/ideas/:id',(req,res)=>{
         res.redirect('/ideas');
     });
 });
+// User login route
+app.get('/users/login',(req,res)=>{
+    res.send('login');
+});
+// User register route
+app.get('/users/register',(req,res)=>{
+    res.send('register');
+});
+
 
 const port=3000;
 
