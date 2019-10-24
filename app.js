@@ -1,5 +1,6 @@
 const express=require('express');
 const exphbs=require('express-handlebars');
+const path=require('path');
 const methodOverride = require('method-override');
 const flash=require('connect-flash');
 const session=require('express-session');
@@ -26,10 +27,13 @@ mongoose.connect('mongodb://localhost/vidjot',{
 app.engine('handlebars',exphbs({
     defaultLayout:'main'
 }));
+app.set('view engine','handlebars');
 // Body parser middleware
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
-app.set('view engine','handlebars');
+
+// Static folder
+app.use(express.static(path.join(__dirname,'public')));
 
 // Method override middleware
 app.use(methodOverride('_method'));
