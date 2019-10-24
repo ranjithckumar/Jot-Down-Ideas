@@ -6,8 +6,10 @@ const session=require('express-session');
 const bodyParser=require('body-parser');
 const mongoose=require('mongoose');
 
-
 const app=express();
+// Load routes
+
+const ideas=require('./routes/ideas');
 // Map global promises -get rid of  warning
 mongoose.Promise=global.Promise;
 // Connect to mongoDb
@@ -17,10 +19,6 @@ mongoose.connect('mongodb://localhost/vidjot',{
 .then(()=>console.log('MongoDb connected'))
 .catch(err=>console.log('Error '));
 
-// Load Idea Model
-
-require('./models/Idea');
-const Idea=mongoose.model('Ideas');
 //  Handle-bars middleware
 app.engine('handlebars',exphbs({
     defaultLayout:'main'
@@ -60,90 +58,6 @@ app.get(('/'),(req,res)=>{
 app.get(('/about'),(req,res)=>{
     res.render('about');
 });
-// Idea index page
-app.get(('/ideas'),(req,res)=>{
-    res.render('ideas/index');
-})
-
-// Add ideas
-app.get(('/ideas/add'),(req,res)=>{
-    Idea.find({})
-    .sort({dare:'desc'})
-    .then(ideas=>{
-        res.render('ideas/add',{
-            ideas:ideas
-        });
-    })
-  
-});
-// Edit idea form
-app.get('/ideas/edit/:id',(req,res)=>{
-    Idea.findOne({
-        _id:req.params.id
-    })
-    .then(idea=>{
-        res.render('ideas/edit',{
-            idea:idea
-        });
-    });    
-});
-
-// Process form
-app.post('/ideas',(req,res)=>{
-  let errors=[];
-  if(!req.body.title){
-      errors.push({text:'Please add a title'});
-  }
-  if(!req.body.details){
-    errors.push({text:'Please add some details'});
-  }
-  if(errors.length>0){
-      res.render('ideas/add',{
-          errors:errors,
-          title:req.body.title,
-          details:req.body.title
-      });
-  }else{
-      const newUser={
-          title:req.body.title,
-          details:req.body.details
-      }
-      new Idea(newUser)
-      .save()
-      .then(idea=>{
-        req.flash('success_msg','Video idea added');
-          res.redirect('/ideas');
-      })
-  }
-
-});
-
-// Edit form process
-app.put('/ideas/:id',(req,res)=>{
-  Idea.findOne({
-      _id:req.params.id
-  })
-  .then(idea=>{
-    //   new values
-       idea.title=req.body.title; 
-       idea.details=req.body.details;
-       
-       idea.save()
-       .then(idea=>{
-        req.flash('success_msg','Video idea Updated');
-           res.redirect('/ideas');
-       })
-  });
-});
-
-// Delete ideas
-app.delete('/ideas/:id',(req,res)=>{
-    Idea.remove({_id:req.params.id})
-    .then(()=>{
-        req.flash('success_msg','Video idea removed');
-        res.redirect('/ideas');
-    });
-});
 // User login route
 app.get('/users/login',(req,res)=>{
     res.send('login');
@@ -153,7 +67,8 @@ app.get('/users/register',(req,res)=>{
     res.send('register');
 });
 
-
+// Use routes
+app.use('/ideas',ideas);
 const port=3000;
 
 app.listen(port,()=>{
