@@ -115,6 +115,14 @@ app.put('/ideas/:id',(req,res)=>{
        })
   });
 });
+
+// Delete ideas
+app.delete('/ideas/:id',(req,res)=>{
+    Idea.remove({_id:req.params.id})
+    .then(()=>{
+        res.redirect('/ideas');
+    });
+});
 const port=3000;
 
 app.listen(port,()=>{
