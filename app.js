@@ -7,9 +7,12 @@ const bodyParser=require('body-parser');
 const mongoose=require('mongoose');
 
 const app=express();
-// Load routes
 
+// Load routes
 const ideas=require('./routes/ideas');
+// Load routes
+const users=require('./routes/users');
+
 // Map global promises -get rid of  warning
 mongoose.Promise=global.Promise;
 // Connect to mongoDb
@@ -58,17 +61,12 @@ app.get(('/'),(req,res)=>{
 app.get(('/about'),(req,res)=>{
     res.render('about');
 });
-// User login route
-app.get('/users/login',(req,res)=>{
-    res.send('login');
-});
-// User register route
-app.get('/users/register',(req,res)=>{
-    res.send('register');
-});
 
 // Use routes
 app.use('/ideas',ideas);
+app.use('/users',users);
+
+// Port number
 const port=3000;
 
 app.listen(port,()=>{
