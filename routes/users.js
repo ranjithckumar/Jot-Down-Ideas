@@ -8,7 +8,7 @@ router.get('/login',(req,res)=>{
 });
 // User register route
 router.get('/register',(req,res)=>{
-    res.send('register');
+    res.render('users/register');
 });
 
 module.exports=router; 
